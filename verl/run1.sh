@@ -5,9 +5,9 @@ export VLLM_ATTENTION_BACKEND=XFORMERS
 #### change the following paths ####
 code_path=/workspace/code/copo-code  # 放置代码的路径
 data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
-save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
+save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_soft0K5b1" # 存储权重文件的路径
 model_path="/workspace/datasets/LVLMs/Qwen/Qwen2.5-3B-Instruct" # 初始模型路径（需下载）
-wandb_name="verl_3b_instruct_grpo_onlyGlobal_k5b1" # wandb实验名称
+wandb_name="verl_3b_instruct_grpo_soft0K5b1" # wandb实验名称
 
 ##### train ####
 train_path=$data_path/DAPO-Math-17k/data/dapo-math-17k_0.1.parquet
@@ -29,7 +29,7 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.reward_coef_flg=false \
     actor_rollout_ref.actor.k=5 \
     actor_rollout_ref.actor.b=1 \
-    actor_rollout_ref.actor.global_flg='only global' \
+    actor_rollout_ref.actor.global_flg='soft with zero' \
     actor_rollout_ref.model.path=${model_path} \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.model.use_remove_padding=True \
