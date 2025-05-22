@@ -5,7 +5,7 @@ export VLLM_ATTENTION_BACKEND=XFORMERS
 #### change the following paths ####
 code_path=/workspace/code/copo-code  # 放置代码的路径
 data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
-save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_soft0K5b1" # 存储推理数据及结果的路径
+save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlySoft" # 存储推理数据及结果的路径
 
 step_start=1
 step_end=70
