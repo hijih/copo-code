@@ -8,7 +8,7 @@ data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
 save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_only0KL" # 存储推理数据及结果的路径
 
 step_start=1
-step_end=20
+step_end=70
 step_interval=1
 
 aime24_test_path=$data_path/aime24/test_with_answer.parquet
