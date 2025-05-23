@@ -92,7 +92,7 @@ for step in $(seq $step_start $step_interval $step_end); do
 
     model_path="${save_path}/global_step_${step}/huggingface"
     experiment_name="${save_path}-${step}"
-    local_dir="${save_path}/mg/${step}"
+    local_dir="${save_path}/aime/${step}"
 
     python3 -m verl.trainer.main_ppo \
         algorithm.adv_estimator=grpo \
