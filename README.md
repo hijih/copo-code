@@ -69,3 +69,5 @@ step_end=20 # 测试的终止路径
 - 在镜像中运行 test_mg.sh 和 test_aime.sh，进行测试
 - test_mg.sh 逐 step 串行运行较慢，可再复制几个脚本，修改 step_start, step_end 分段并行。之前一般分为3个脚本运行，即step1~22, step23~44, step45~65。如果有更多卡，test_aime.sh 也可以这样做 : )
 - 运行结束后，推理数据及结果会放在上面设置的 save_path 里，麻烦将 save_path 的所有内容进行上传，谢谢~
+
+### 结果文件
