@@ -71,4 +71,4 @@ step_end=20 # 测试的终止路径
 - 运行结束后，推理数据及结果会放在上面设置的 save_path 里，麻烦将 save_path 的所有内容进行上传，谢谢~
 
 ### 结果文件
-- [05.22] [https://huggingface.co/datasets/shaohang/COPO](https://huggingface.co/datasets/shaohang/COPO/blob/main/outputs_0522.tar) 
+- [05.22] [https://huggingface.co/datasets/shaohang/COPO/outputs_0522.tar](https://huggingface.co/datasets/shaohang/COPO/blob/main/outputs_0522.tar) 
