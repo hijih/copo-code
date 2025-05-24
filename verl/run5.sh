@@ -7,7 +7,7 @@ code_path=/workspace/code/copo-code  # 放置代码的路径
 data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
 save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_soft0K5b1.5" # 存储权重文件的路径
 model_path="/workspace/datasets/LVLMs/Qwen/Qwen2.5-3B-Instruct" # 初始模型路径（需下载）
-wandb_name="verl_3b_instruct_grpo_soft0K3b1" # wandb实验名称
+wandb_name="verl_3b_instruct_grpo_soft0K5b1.5" # wandb实验名称
 
 ##### train ####
 train_path=$data_path/DAPO-Math-17k/data/dapo-math-17k_0.1.parquet
