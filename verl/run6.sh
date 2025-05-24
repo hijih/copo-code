@@ -1,12 +1,13 @@
 set -x
 
 export VLLM_ATTENTION_BACKEND=XFORMERS
+export WANDB_API_KEY='01c8c25114910ecd17d17fa56bc8c837ac6aa85b'
 
 #### change the following paths ####
-code_path=/workspace/code/copo-code  # 放置代码的路径
-data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
-save_path="/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_soft0K5b0.5" # 存储权重文件的路径
-model_path="/workspace/datasets/LVLMs/Qwen/Qwen2.5-3B-Instruct" # 初始模型路径（需下载）
+code_path=/home/tione/notebook/alanhshao/copo/copo-code  # 放置代码的路径
+data_path=/home/tione/notebook/alanhshao/copo/copo-data/data #/workspace/datasets/hjh  # 放置训练测试数据的路径
+save_path=/home/tione/notebook/alanhshao/copo/copo-code/outputs/0523/3b_instruct_grpo_soft0K5b0.5 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
+model_path=/home/tione/notebook/alanhshao/pretrained_models/Qwen2.5-3B-Instruct #"/workspace/datasets/LVLMs/Qwen/Qwen2.5-3B-Instruct" # 初始模型路径（需下载）
 wandb_name="verl_3b_instruct_grpo_soft0K5b0.5" # wandb实验名称
 
 ##### train ####
