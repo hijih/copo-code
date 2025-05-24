@@ -29,7 +29,7 @@ python3 -m verl.trainer.main_ppo \
     data.truncation='error' \
     actor_rollout_ref.actor.reward_coef_flg=false \
     actor_rollout_ref.actor.k=5 \
-    actor_rollout_ref.actor.b=0.5 \
+    actor_rollout_ref.actor.b=1 \
     actor_rollout_ref.actor.global_flg='no zero' \
     actor_rollout_ref.model.path=${model_path} \
     actor_rollout_ref.actor.optim.lr=1e-6 \
