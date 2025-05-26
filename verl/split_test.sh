@@ -121,11 +121,6 @@ wait
 ## test for aime24 and aime25
 test_files="['$aime24_test_path', '$aime25_test_path']"
 
-# 可以自由调整这几个变量：
-step_start=1
-step_end=70
-step_interval=1
-
 step_list=()
 for step in $(seq $step_start $step_interval $step_end); do
     step_list+=($step)
