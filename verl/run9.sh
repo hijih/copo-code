@@ -8,7 +8,7 @@ code_path=/home/tione/notebook/alanhshao/copo/copo-code  # 放置代码的路径
 data_path=/home/tione/notebook/alanhshao/copo/copo-data/data # 放置训练测试数据的路径
 save_path=/home/tione/notebook/alanhshao/copo/copo-code/outputs/0523/7b_instruct_grpo_soft0K5b1 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
 model_path=/home/tione/notebook/alanhshao/pretrained_models/Qwen2.5-7B-Instruct # 7B模型需下载
-wandb_name="verl_7b_instruct_grpo_onlyZero" # wandb实验名称
+wandb_name="verl_7b_instruct_grpo_soft0K5b1" # wandb实验名称
 
 ##### train ####
 train_path=$data_path/DAPO-Math-17k/data/dapo-math-17k_0.1.parquet
