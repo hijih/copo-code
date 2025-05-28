@@ -5,10 +5,10 @@ export VLLM_ATTENTION_BACKEND=XFORMERS
 export WANDB_API_KEY='01c8c25114910ecd17d17fa56bc8c837ac6aa85b'
 
 #### change the following paths ####
-num_gpus=2  ## 测试使用的gpu数量
+num_gpus=4  ## 测试使用的gpu数量
 code_path=/home/tione/notebook/alanhshao/copo/copo-code  # 放置代码的路径
 data_path=/home/tione/notebook/alanhshao/copo/copo-data/data  # 放置训练测试数据的路径
-save_path="/home/tione/notebook/alanhshao/copo/copo-code/outputs/0523/3b_instruct_grpo_soft0K3b1" # 存储推理数据及结果的路径
+save_path="/cfs_turbo/alanhshao/copo/copo-code/outputs/0524/3b_instruct_grpo_soft0K1b1" # 存储推理数据及结果的路径
 
 aime24_test_path=$data_path/aime24/test_with_answer.parquet
 aime25_test_path=$data_path/aime25/test_formatOnly.parquet
