@@ -2,10 +2,10 @@ import json
 import pandas as pd
 import re
 
-name = 'onlyGlobal'
+name = 'onlySoft'
 
-jsonl_path = '/Users/hjh/Downloads/outputs0522/mg/result.jsonl'
-output_xlsx = "/Users/hjh/Desktop/results/onlyGlobal_output.xlsx"
+jsonl_path = '/Users/hjh/Downloads/outputs_0523/3b_instruct_grpo_soft0K5b1_run1/mg/result.jsonl'
+output_xlsx = "/Users/hjh/Desktop/soft0K5b1_output_mg.xlsx"
 target_datasets = ["aime24", "aime25", "MATH-500", "gsm8k"]
 
 # 定义 metric 映射和优先级
