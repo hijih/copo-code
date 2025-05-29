@@ -6,7 +6,7 @@ export WANDB_API_KEY='01c8c25114910ecd17d17fa56bc8c837ac6aa85b'
 #### change the following paths ####
 code_path=/home/tione/notebook/alanhshao/copo/copo-code  # 放置代码的路径
 data_path=/home/tione/notebook/alanhshao/copo/copo-data/data # 放置训练测试数据的路径
-save_path=/home/tione/notebook/alanhshao/copo/copo-code/outputs/0523/7b_instruct_grpo_soft0K5b1 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
+save_path=/cfs_turbo/alanhshao/copo/copo-code/outputs/0524/7b_instruct_grpo_soft0K5b1 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
 model_path=/home/tione/notebook/alanhshao/pretrained_models/Qwen2.5-7B-Instruct # 7B模型需下载
 wandb_name="verl_7b_instruct_grpo_soft0K5b1" # wandb实验名称
 
@@ -61,7 +61,7 @@ python3 -m verl.trainer.main_ppo \
     trainer.logger=['console','wandb'] \
     trainer.project_name='verl_0.5b-instruct_dapo' \
     trainer.experiment_name=${wandb_name} \
-    trainer.n_gpus_per_node=8 \
+    trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
     trainer.val_before_train=False \
     trainer.save_freq=1 \
