@@ -73,3 +73,4 @@ step_end=20 # 测试的终止路径
 ### 结果文件
 - [05.22] [https://huggingface.co/datasets/shaohang/COPO/outputs_0522.tar](https://huggingface.co/datasets/shaohang/COPO/blob/main/outputs_0522.tar)
 - [05.23] [https://huggingface.co/datasets/shaohang/COPO/outputs_0523.tar](https://huggingface.co/datasets/shaohang/COPO/blob/main/outputs_0523.tar)
+- [05.24-3b] [https://huggingface.co/datasets/shaohang/COPO/outputs_0524_3b.tar](https://huggingface.co/datasets/shaohang/COPO/blob/main/outputs_0524_3b.tar) 
