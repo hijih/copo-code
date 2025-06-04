@@ -686,10 +686,10 @@ def compute_policy_loss_with_global(
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
         elif global_flg == 'only zero':
             global_loss_weight = not_zero
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None]
+            policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight
         elif global_flg == 'soft with zero':
             global_loss_weight = global_loss_weight.unsqueeze(1) * not_zero
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None]
+            policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight
         elif global_flg == 'only forced':
             global_loss_weight = all_same
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###

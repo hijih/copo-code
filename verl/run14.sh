@@ -6,9 +6,9 @@ export WANDB_API_KEY='01c8c25114910ecd17d17fa56bc8c837ac6aa85b'
 #### change the following paths ####
 code_path=/home/tione/notebook/alanhshao/copo/copo-code  # 放置代码的路径
 data_path=/home/tione/notebook/alanhshao/copo/copo-data/data # 放置训练测试数据的路径
-save_path=/cfs_turbo/alanhshao/copo/copo-code/outputs/0524/7b_instruct_grpo_soft0K10b1 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
+save_path=/cfs_turbo/alanhshao/copo/copo-code/outputs/0524/7b_instruct_grpo_soft0K5b1_2 #"/workspace/datasets/CO2/r1-vl/3b_instruct_grpo_onlyGlobal_k5b1" # 存储权重文件的路径
 model_path=/home/tione/notebook/alanhshao/pretrained_models/Qwen2.5-7B-Instruct # 7B模型需下载
-wandb_name="verl_7b_instruct_grpo_soft0K10b1" # wandb实验名称
+wandb_name="verl_7b_instruct_grpo_soft0K5b1_2" # wandb实验名称
 
 ##### train ####
 train_path=$data_path/DAPO-Math-17k/data/dapo-math-17k_0.1.parquet
@@ -28,7 +28,7 @@ python3 -m verl.trainer.main_ppo \
     data.filter_overlong_prompts=True \
     data.truncation='error' \
     actor_rollout_ref.actor.reward_coef_flg=false \
-    actor_rollout_ref.actor.k=10 \
+    actor_rollout_ref.actor.k=5 \
     actor_rollout_ref.actor.b=1 \
     actor_rollout_ref.actor.global_flg='soft with zero' \
     actor_rollout_ref.model.path=${model_path} \
