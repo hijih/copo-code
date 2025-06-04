@@ -2,10 +2,10 @@ import json
 import pandas as pd
 import re
 
-name = "k5b1.5"
+name = "new_onlyK6"
 
-jsonl_path = '/Users/hjh/Downloads/outputs_0524_3b/3b_instruct_grpo_soft0K5b1.5_run5/mg/result.jsonl'
-output_xlsx = "/Users/hjh/Desktop/"+name+"_output_mg.xlsx"
+jsonl_path = '/Users/hjh/Desktop/python/result.jsonl'
+output_xlsx = "/Users/hjh/Desktop/"+name+"_output.xlsx"
 target_datasets = ["aime24", "aime25", "MATH-500", "gsm8k"]
 
 # 定义 metric 映射和优先级
