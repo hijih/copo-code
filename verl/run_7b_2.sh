@@ -16,7 +16,7 @@ train_files="['$train_path']"
 aime24_test_path=$data_path/aime24/test_with_answer.parquet
 test_files="['$aime24_test_path']"
 loss_agg_mode="seq-mean-token-mean"
-global_flg="no-zero"
+global_flg="only-zero"
 
 python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
