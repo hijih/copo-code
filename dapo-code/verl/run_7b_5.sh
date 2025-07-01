@@ -82,4 +82,5 @@ python3 -m recipe.dapo.src.main_dapo \
     trainer.save_freq=1 \
     trainer.test_freq=0 \
     trainer.default_local_dir=${save_path} \
+    trainer.total_training_steps=18 \
     trainer.total_epochs=1 $@

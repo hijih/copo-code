@@ -68,4 +68,5 @@ python3 -m verl.trainer.main_ppo \
     trainer.save_freq=1 \
     trainer.test_freq=0 \
     trainer.default_local_dir=${save_path} \
+    trainer.total_training_steps=70 \
     trainer.total_epochs=1 $@
