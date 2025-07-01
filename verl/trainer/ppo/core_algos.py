@@ -671,31 +671,39 @@ def compute_policy_loss_with_global(
 
     ## gather 2 loss
     global_loss_weight = torch.sigmoid(k * (reward_entropy - b))
-
     not_zero = (local_reward != 0).to(local_reward.dtype).unsqueeze(1).expand(-1, advantages.shape[1])
+
+    # print("local_reward shape", local_reward.shape)
     # print("not_zero shape", not_zero.shape)
+    # print("global_loss_weight shape", global_loss_weight.shape)
+    
     # print("not_zero", not_zero)
     all_same = (advantages != 0).to(advantages.dtype)
     all_same = all_same[:, 0]
     
-    if global_flg == 'no global':
+    if global_flg == 'no-global':
         policy_loss = pg_losses
     else:
-        if global_flg == 'soft with forced':
+        if global_flg == 'soft-with-forced':
             global_loss_weight = global_loss_weight * all_same
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-        elif global_flg == 'only zero':
+        elif global_flg == 'only-zero':
             global_loss_weight = not_zero
             policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight
-        elif global_flg == 'soft with zero':
+        elif global_flg == 'only-zero-wrong':
+            global_loss_weight = not_zero
+            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None]
+            print("policy_loss shape", policy_loss.shape)
+        elif global_flg == 'soft-with-zero':
             global_loss_weight = global_loss_weight.unsqueeze(1) * not_zero
-            policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight
-        elif global_flg == 'only forced':
+            policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight ###
+            print("policy_loss shape", policy_loss.shape)
+        elif global_flg == 'only-forced':
             global_loss_weight = all_same
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-        elif global_flg == 'only soft':
+        elif global_flg == 'only-soft':
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-        elif global_flg == 'only global':
+        elif global_flg == 'only-global':
             policy_loss = global_pg_losses
         else:
             raise TypeError(f"global_flg only support: 'soft with forced', 'only forced', 'only soft', 'no global', but get: {global_flg}")
