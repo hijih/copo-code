@@ -1,7 +1,7 @@
 set -x
 
 export VLLM_ATTENTION_BACKEND=XFORMERS
-
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 #### change the following paths ####
 code_path=/workspace/code/copo-code  # 放置代码的路径
 data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
@@ -19,7 +19,7 @@ gsm8k_test_path=$data_path/gsm8k/test_formatOnly.parquet
 train_path="$data_path/MATH-500/test_formatOnly.parquet"
 train_files="['$train_path']"
 
-test_files="['$math500_test_path', '$gsm8k_test_path']"
+test_files="['$math500_test_path']"
 
 
 for step in $(seq $step_start $step_interval $step_end); do
@@ -74,7 +74,7 @@ for step in $(seq $step_start $step_interval $step_end); do
         trainer.logger=['console','wandb'] \
         trainer.project_name="test" \
         trainer.experiment_name="${experiment_name}" \
-        trainer.n_gpus_per_node=1 \
+        trainer.n_gpus_per_node=4 \
         trainer.nnodes=1 \
         trainer.val_before_train=True \
         +trainer.val_only=True \
@@ -85,7 +85,7 @@ for step in $(seq $step_start $step_interval $step_end); do
 done
 
 
-test_files="['$aime24_test_path', '$aime25_test_path']"
+test_files="['$aime24_test_path']"
 
 for step in $(seq $step_start $step_interval $step_end); do
     echo "Processing step $step..."
@@ -139,7 +139,7 @@ for step in $(seq $step_start $step_interval $step_end); do
         trainer.logger=['console','wandb'] \
         trainer.project_name="test" \
         trainer.experiment_name="${experiment_name}" \
-        trainer.n_gpus_per_node=1 \
+        trainer.n_gpus_per_node=4 \
         trainer.nnodes=1 \
         trainer.val_before_train=True \
         +trainer.val_only=True \

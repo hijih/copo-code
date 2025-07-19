@@ -3,8 +3,7 @@ export RAY_TMPDIR=/workspace/datasets/ray_tmp
 export VLLM_ATTENTION_BACKEND=XFORMERS
 export CUDA_VISIBLE_DEVICES=4,5,6,7
 export VLLM_ATTENTION_BACKEND=XFORMERS
-export WANDB_BASE_URL=https://api.bandw.top
-export WANDB_API_KEY=760a6965ccab99b933ed3402f7c28958502073dc
+export WANDB_MODE=offline
 #### change the following paths ####
 code_path=/workspace/code/copo-code  # 放置代码的路径
 data_path=/workspace/datasets/hjh  # 放置训练测试数据的路径
