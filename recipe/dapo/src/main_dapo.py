@@ -20,7 +20,8 @@ import os
 import hydra
 import ray
 
-from .dapo_ray_trainer import RayDAPOTrainer
+# from .dapo_ray_trainer import RayDAPOTrainer
+from .dapo_ray_trainer_copo import RayDAPOTrainer
 
 
 def get_custom_reward_fn(config):
