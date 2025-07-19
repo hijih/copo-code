@@ -32,6 +32,7 @@ actor_rollout_ref:
   actor:
     reward_coef_flg: false
     global_flg: True
+    global_loss_coef: 1.0
     b: 1
     k: 1
     strategy: fsdp  # This is for backward-compatibility

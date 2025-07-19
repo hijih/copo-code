@@ -578,6 +578,7 @@ def agg_loss(loss_mat: torch.Tensor, loss_mask: torch.Tensor, loss_agg_mode: str
 def compute_policy_loss_with_global(
                         local_reward,
                         global_flg,
+                        global_loss_coef,
                         old_log_prob,
                         log_prob,
                         advantages,
@@ -703,6 +704,8 @@ def compute_policy_loss_with_global(
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
         elif global_flg == 'only-soft':
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
+        elif global_flg == 'only-soft-with-coef':
+            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] * global_loss_coef + pg_losses * global_loss_weight[:, None] ###
         elif global_flg == 'only-global':
             policy_loss = global_pg_losses
         else:

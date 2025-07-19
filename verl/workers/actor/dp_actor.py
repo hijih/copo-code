@@ -362,6 +362,7 @@ class DataParallelPPOActor(BasePPOActor):
                     pg_loss_with_global, pg_clipfrac, global_pg_clipfrac, ppo_kl, global_loss_weight, global_pg_losses, pg_losses, pg_clipfrac_lower, global_pg_clipfrac_lower= compute_policy_loss_with_global(
                         local_reward=local_reward,
                         global_flg=self.config.global_flg,
+                        global_loss_coef=self.config.global_loss_coef,
                         old_log_prob=old_log_prob,
                         log_prob=log_prob,
                         advantages=advantages,
