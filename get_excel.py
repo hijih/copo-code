@@ -2,7 +2,7 @@ import json
 import pandas as pd
 
 # 设置统一的名称和文件路径
-name = "3b_k10b1.5"
+name = "1.5b_math_base_new_k6Only0"
 jsonl_paths = [
     '/Users/hjh/Desktop/python/result.jsonl',
     '/Users/hjh/Desktop/python/result 2.jsonl'
