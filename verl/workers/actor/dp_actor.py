@@ -406,14 +406,6 @@ class DataParallelPPOActor(BasePPOActor):
                         loss = policy_loss / self.gradient_accumulation
                     loss.backward()
 
-                    # unique_values1 = torch.unique(pg_losses.float().round(decimals=6))
-                    # print("in micro, pg_losses不同的数值有：", unique_values1)
-                    # print("in micro, pg_losses总共有多少个不同值：", unique_values1.numel())
-
-                    # unique_values2 = torch.unique(global_pg_losses.float().round(decimals=6))
-                    # print("in micro, global_pg_losses不同的数值有：", unique_values2)
-                    # print("in micro, global_pg_losses总共有多少个不同值：", unique_values2.numel())
-
                     data = {
                         'actor/pg_losses/mean': pg_losses.mean().detach().item(),
                         'actor/pg_losses/min': pg_losses.min().detach().item(),

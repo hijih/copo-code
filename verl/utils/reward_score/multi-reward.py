@@ -94,14 +94,13 @@ def remove_boxed(s: str) -> str:
     Returns:
         The content inside the boxed command, or original string if not boxed.
     """
-    if not isinstance(s, str):  # 处理 None 或其他非字符串情况
+    if not isinstance(s, str):  
         return s
     left = "\\boxed{"
     right = "}"
     if s.startswith(left) and s.endswith(right):
         return s[len(left):-1]
-    return s  # 如果不是 boxed 格式，直接返回原始字符串
-
+    return s  
 
 def extract_solution(solution_str):
     solution_str = remove_boxed(last_boxed_only_string(solution_str))
@@ -312,7 +311,7 @@ def verify(solution_str: str,
 import re
 
 def normalize_numbers(s: str) -> str:
-    # 1. 替换波斯/阿拉伯数字为西方数字
+
     translation_table = str.maketrans({
         '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
         '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
@@ -321,12 +320,10 @@ def normalize_numbers(s: str) -> str:
     })
     s = s.translate(translation_table)
 
-    # 2. 去掉负数和正数前的多余0（只保留单个0）
-    # 负数 -00049 → -49
     s = re.sub(r'-(0+)(\d+)', r'-\2', s)
-    # 正数 00049 → 49
+
     s = re.sub(r'\b0+(\d+)', r'\1', s)
-    # 小数 00.5 → 0.5
+
     s = re.sub(r'\b0+(\.\d+)', r'0\1', s)
 
     return s
@@ -356,7 +353,6 @@ def is_true(model_output: str, ground_truth: str) -> bool:
     return ret_score
 
 def preprocess_latex(expr_str: str) -> str:
-    """将 LaTeX 表达式转换为更容易 sympy 解析的格式"""
 
     expr_str = expr_str.strip()
     expr_str = expr_str.replace('(without quotes)', '') 
@@ -364,30 +360,16 @@ def preprocess_latex(expr_str: str) -> str:
     expr_str = expr_str.replace('without the quotes', '')
     expr_str = expr_str.replace('without quotes', '') 
 
-    # 0. 去除包裹在 $...$ 或 $$...$$ 中的内容
     expr_str = re.sub(r'^\s*\${1,2}(.*?)\${1,2}\s*$', r'\1', expr_str)
-
-    # 1. 处理 \boxed{...} → ...
     expr_str = re.sub(r'\\boxed{([^{}]+)}', r'\1', expr_str)
-
-    # 2. 处理 \text{...} → ...
     expr_str = re.sub(r'\\text{([^{}]+)}', r'\1', expr_str)
 
-    # 3. 去掉 \left 和 \right
     expr_str = expr_str.replace(r'\left', '')
     expr_str = expr_str.replace(r'\right', '')
-
-    # 4. 替换 \frac{a}{b} → (a)/(b)
     expr_str = re.sub(r'\\frac{([^{}]+)}{([^{}]+)}', r'(\1)/(\2)', expr_str)
-
-    # 5. 替换 \cdot, \times → *
     expr_str = expr_str.replace(r'\cdot', '*')
     expr_str = expr_str.replace(r'\times', '*')
-
-    # 6. 处理 \\ → \ （避免双反斜杠转义失败）
     expr_str = expr_str.replace('\\\\', '\\')
-
-    # 7. 删除多余空格
     expr_str = expr_str.replace(']', '')
     expr_str = expr_str.replace('}', '')
     expr_str = expr_str.replace('\n', '')
@@ -423,19 +405,17 @@ def tag_count_reward(solution_str) -> list[float]:
     return reward
 
 def extract_last_answer_block(text):
-    # 先匹配 \\text{Answer: }
+
     tex_match = re.search(r'\\text\{Answer:\s*\}', text, flags=re.IGNORECASE)
     if tex_match:
         return text[tex_match.end():].strip()
     
-    # 再匹配 'Answer:' 或 'answer is'
     pattern = r'(Answer:|answer is)'
     matches = list(re.finditer(pattern, text, flags=re.IGNORECASE))
     if matches:
         last_match = matches[-1]
         return text[last_match.end():].strip()
     
-    # 最后 fallback 到 extract_solution
     return extract_solution(text)
 
 def accuracy_reward(data_source, solution_str, ground_truth, extra_info=None):
@@ -496,12 +476,6 @@ def accuracy_reward(data_source, solution_str, ground_truth, extra_info=None):
                 
     # print(f"answer: {answer}, gt: {ground_truth}, reward: {reward}")
     return reward, answer, answer
-    # strict_box_verify = False
-    # correct, pred = verify(solution_str, ground_truth, strict_box_verify)
-    # if correct:
-    #     reward = 1.0
-
-    # return reward, pred, pred
 
 def compute_score(data_source, solution_str: str, ground_truth: str, extra_info=None) -> float:
     

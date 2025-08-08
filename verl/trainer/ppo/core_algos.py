@@ -137,13 +137,9 @@ def compute_score_global(local_reward: list[torch.Tensor], extract_answer, rewar
         f.write(json_line + "\n")
 
     def compute_entropy(prob_dist: torch.Tensor, eps: float = 1e-8):
-        # 确保是 tensor
+
         prob_dist = torch.tensor(prob_dist, dtype=torch.float32)
-
-        # 屏蔽掉 <= 0 的概率（避免 log 出错）
         prob_dist = prob_dist[prob_dist > 0]
-
-        # 防止 log(0) 出错，用 eps 稳定
         entropy = -torch.sum(prob_dist * torch.log2(prob_dist + eps))
         return entropy
 
@@ -152,76 +148,6 @@ def compute_score_global(local_reward: list[torch.Tensor], extract_answer, rewar
         total = sum(counts.values())
         probs = [count / total for count in counts.values()]
         return compute_entropy(probs)
-
-    def canonicalize_expressions(expr_list):
-        """
-        将表达式列表中等价的数学表达式归一化表示，支持 LaTeX 和普通格式。
-        返回和输入等长的 list，等价表达式会统一为相同的 canonical string。
-        """
-        simplified_map = {}
-        result = []
-
-        def preprocess_latex(expr_str):
-            """预处理 LaTeX 表达式，替换 '\\' 和 '\\frac' 之类的符号"""
-            # cjw:添加了对$符号的识别
-            # 待处理：如果模型输出\box, \text等latex符号，仍然无法正确提取
-            expr_str = expr_str.strip()
-            # 1) 去掉行间公式 $$…$$ 的定界符
-            expr_str = re.sub(r'^\s*\$\$(.*?)\$\$\s*$', r'\1', expr_str)
-            # 2) 去掉行内公式 $…$ 的定界符
-            expr_str = re.sub(r'^\s*\$(.*?)\$\s*$', r'\1', expr_str)
-
-            # 替换 \boxed{...} 为 ...
-            expr_str = re.sub(r'\\boxed{([^}]+)}', r'\1', expr_str)
-            # 替换 `\frac{a}{b}` 为 `a/b`
-            expr_str = re.sub(r'\\frac{([^}]+)}{([^}]+)}', r'(\1)/(\2)', expr_str)
-            # 替换 `\cdot` 为 `*`
-            expr_str = expr_str.replace('\\cdot', '*')
-            # 替换掉 LaTeX 中的转义字符 `\\` 为 `\`
-            expr_str = expr_str.replace('\\', '')
-            return expr_str
-
-        def try_parse_expr(expr_str):
-            """尝试将字符串转为 sympy 表达式"""
-            try:
-                # 预处理 LaTeX 表达式
-                expr_str = preprocess_latex(expr_str)
-                # 尝试使用 sympy 的 sympify 解析
-                parsed = sympify(expr_str)
-                # 返回简化后的表达式
-                return simplify(parsed)
-            except Exception as e:
-                print(f"Parse failed for '{expr_str}': {e}")
-                return None  # 返回 None 表示无法解析
-
-        for expr_str in expr_list:
-            parsed = try_parse_expr(expr_str)
-            if parsed is None:
-                result.append(expr_str)  # 无法解析，保留原始字符串
-                continue
-
-            found = False
-            for key in simplified_map:
-                try:
-                    if simplify(parsed - key) == 0:
-                        result.append(simplified_map[key])
-                        found = True
-                        break
-                except Exception as e:
-                    print(f"Comparison failed: parsed={parsed}, key={key}, error={e}")
-            # 这一行在4.21进行了修改，防止有理数过长导致str操作爆掉
-            if not found:
-                try:
-                    # 优先用精确表达式
-                    canonical = str(parsed)
-                except ValueError:
-                    # 如果太大转不动，就退成浮点字符串
-                    canonical = str(parsed.evalf(10))
-                simplified_map[parsed] = canonical
-                result.append(canonical)
-
-
-        return result
     
     global_reward = 0.0
     correct_logp = 0.0
@@ -231,11 +157,7 @@ def compute_score_global(local_reward: list[torch.Tensor], extract_answer, rewar
         correct_logp += local_reward[i]
     correct_logp = correct_logp / num_generation
     
-    # canonical_exprs = canonicalize_expressions(extract_answer)
     entropy = entropy_from_list(extract_answer)
-
-    # print("统一形式：", canonical_exprs)
-    # print("熵值：", entropy)
 
     if reward_coef_flg:
         reward_coef =  ( 1 - lamda * entropy )
@@ -245,7 +167,6 @@ def compute_score_global(local_reward: list[torch.Tensor], extract_answer, rewar
 
     return global_reward, entropy
 
-#######
 def compute_grpo_outcome_advantage_with_global(
                                    reward_coef_flg: bool,
                                    token_level_rewards: torch.Tensor,
@@ -269,12 +190,11 @@ def compute_grpo_outcome_advantage_with_global(
         Returns: `(torch.Tensor)`
             shape: (bs, response_length)
     """
-    # print('token_level_rewards.shape', token_level_rewards.shape)
     response_length = token_level_rewards.shape[-1]
     scores = token_level_rewards.sum(dim=-1)
-    global_rewards = torch.zeros_like(scores) # 144 * 1
-    global_scores = torch.zeros_like(scores) # 144 * 1
-    local_reward = torch.zeros_like(scores) # 144 * 1
+    global_rewards = torch.zeros_like(scores) 
+    global_scores = torch.zeros_like(scores) 
+    local_reward = torch.zeros_like(scores) 
     entropy = torch.zeros_like(scores)
 
     id2score = defaultdict(list)
@@ -286,14 +206,12 @@ def compute_grpo_outcome_advantage_with_global(
 
     with torch.no_grad():
         bsz = scores.shape[0]
-        # print("bsz", bsz)
-        # print("index", index)
 
         for i in range(bsz):
             id2score[index[i]].append(scores[i])
             id2extract_answer[index[i]].append(extract_answer[i])
             
-        for idx in id2score:  # 对batch size中的每个index进行处理 24
+        for idx in id2score: 
 
             id2global_score[idx], id2entropy[idx] = compute_score_global(id2score[idx], id2extract_answer[idx], reward_coef_flg, output_file) ## 计算global reward
 
@@ -321,7 +239,7 @@ def compute_grpo_outcome_advantage_with_global(
         
         scores = scores.unsqueeze(-1) * response_mask
         global_scores = global_scores.unsqueeze(-1) * response_mask
-        # print("local_adv", scores)
+
     return scores, scores, global_scores, entropy, global_rewards, local_reward 
 
 # NOTE(sgm): this implementation only consider outcome supervision, where the reward is a scalar.
@@ -656,10 +574,10 @@ def compute_policy_loss_with_global(
         cliprange_high = cliprange
     global_pg_losses2 = -global_adv * torch.clamp(
         ratio, 1 - cliprange_low, 1 + cliprange_high
-    )  # - clip(ratio, 1-cliprange, 1+cliprange) * A
+    )  
     global_clip_pg_losses1 = torch.maximum(
         global_pg_losses1, global_pg_losses2
-    )  # max(-ratio * A, -clip(ratio, 1-cliprange, 1+cliprange) * A)
+    )  
     global_pg_clipfrac = verl_F.masked_mean(torch.gt(global_pg_losses2, global_pg_losses1).float(), response_mask)
 
     global_pg_losses3 = -global_adv * clip_ratio_c
@@ -674,52 +592,26 @@ def compute_policy_loss_with_global(
     global_loss_weight = torch.sigmoid(k * (reward_entropy - b))
     not_zero = (local_reward != 0).to(local_reward.dtype).unsqueeze(1).expand(-1, advantages.shape[1])
 
-    # print("local_reward shape", local_reward.shape)
-    # print("not_zero shape", not_zero.shape)
-    # print("global_loss_weight shape", global_loss_weight.shape)
-    
-    # print("not_zero", not_zero)
     all_same = (advantages != 0).to(advantages.dtype)
     all_same = all_same[:, 0]
     
     if global_flg == 'no-global':
         policy_loss = pg_losses
     else:
-        if global_flg == 'soft-with-forced':
-            global_loss_weight = global_loss_weight * all_same
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-        elif global_flg == 'only-zero':
+        if global_flg == 'only-zero':
             global_loss_weight = not_zero
             policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight
-        elif global_flg == 'only-zero-wrong':
-            global_loss_weight = not_zero
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None]
-            print("policy_loss shape", policy_loss.shape)
         elif global_flg == 'soft-with-zero':
             global_loss_weight = global_loss_weight.unsqueeze(1) * not_zero
             policy_loss = global_pg_losses * (1 - global_loss_weight) + pg_losses * global_loss_weight ###
-            print("policy_loss shape", policy_loss.shape)
-        elif global_flg == 'only-forced':
-            global_loss_weight = all_same
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
         elif global_flg == 'only-soft':
             policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-        elif global_flg == 'only-soft-with-coef':
-            policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] * global_loss_coef + pg_losses * global_loss_weight[:, None] ###
         elif global_flg == 'only-global':
             policy_loss = global_pg_losses
         else:
-            raise TypeError(f"global_flg only support: 'soft with forced', 'only forced', 'only soft', 'no global', but get: {global_flg}")
+            raise TypeError(f"Wrong global_flg: {global_flg}")
         
     pg_loss = agg_loss(loss_mat=policy_loss, loss_mask=response_mask, loss_agg_mode=loss_agg_mode)
-
-    # global_pg_losses1 = -global_adv * ratio
-    # global_pg_losses2 = -global_adv * torch.clamp(ratio, 1 - cliprange_low,
-    #                                        1 + cliprange_high)
-    # global_pg_losses = torch.maximum(global_pg_losses1, global_pg_losses2)
-    # global_loss_weight = torch.sigmoid(k * (reward_entropy - b))
-    # policy_loss = global_pg_losses * (1 - global_loss_weight)[:, None] + pg_losses * global_loss_weight[:, None] ###
-    # policy_loss = pg_losses
 
     return pg_loss, pg_clipfrac, global_pg_clipfrac, ppo_kl, global_loss_weight, global_pg_losses, pg_losses, pg_clipfrac_lower, global_pg_clipfrac_lower
 
